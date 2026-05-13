@@ -13,8 +13,6 @@ export interface ChatResponse {
   finishReason: string;
 }
 
-export type ModelRole = 'analyst' | 'creative' | 'summarizer' | 'fact-checker' | 'writer' | 'general';
-
 export interface ModelInfo {
   id: string;
   name: string;
@@ -23,8 +21,6 @@ export interface ModelInfo {
   adapter: string;
   apiKeyEnv?: string;
   baseUrlEnv?: string;
-  role?: ModelRole;
-  expertise?: string[];
 }
 
 export interface RoundtableResult {

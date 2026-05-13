@@ -7,22 +7,15 @@ interface CollaborationBoardProps {
   parsedTasks?: ParsedTask[];
 }
 
-const roleLabels: Record<string, string> = {
-  analyst: '分析师',
-  creative: '创意专家',
-  summarizer: '总结者',
-  'fact-checker': '事实核查',
-  writer: '写作者',
-  general: '全能助手',
-};
-
-const roleColors: Record<string, string> = {
-  analyst: 'bg-green-100 text-green-700 border-green-300',
-  creative: 'bg-purple-100 text-purple-700 border-purple-300',
-  summarizer: 'bg-blue-100 text-blue-700 border-blue-300',
-  'fact-checker': 'bg-orange-100 text-orange-700 border-orange-300',
-  writer: 'bg-pink-100 text-pink-700 border-pink-300',
-  general: 'bg-gray-100 text-gray-700 border-gray-300',
+const taskColors: Record<string, string> = {
+  '任务A': 'bg-green-100 text-green-700 border-green-300',
+  '任务B': 'bg-purple-100 text-purple-700 border-purple-300',
+  '任务C': 'bg-blue-100 text-blue-700 border-blue-300',
+  '任务D': 'bg-orange-100 text-orange-700 border-orange-300',
+  '任务1': 'bg-pink-100 text-pink-700 border-pink-300',
+  '任务2': 'bg-indigo-100 text-indigo-700 border-indigo-300',
+  '任务3': 'bg-teal-100 text-teal-700 border-teal-300',
+  '任务4': 'bg-yellow-100 text-yellow-700 border-yellow-300',
 };
 
 const taskStatusColors: Record<string, string> = {
@@ -34,6 +27,10 @@ export const CollaborationBoard = ({ result, models, parsedTasks }: Collaboratio
   const getModelName = (modelId: string) => {
     const model = models.find((m) => m.id === modelId);
     return model?.name || modelId;
+  };
+
+  const getTaskColor = (taskName: string) => {
+    return taskColors[taskName] || 'bg-gray-100 text-gray-700 border-gray-300';
   };
 
   return (
@@ -64,11 +61,11 @@ export const CollaborationBoard = ({ result, models, parsedTasks }: Collaboratio
             return (
               <div
                 key={task.taskId}
-                className={`p-4 rounded-lg border ${roleColors[task.role] || roleColors.general}`}
+                className={`p-4 rounded-lg border ${getTaskColor(task.role)}`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium">
-                    {parsedTask?.name || roleLabels[task.role] || task.role}
+                    {parsedTask?.name || task.role}
                   </span>
                   <span className="text-xs bg-white/50 px-2 py-1 rounded">
                     {getModelName(task.modelId)}
@@ -88,7 +85,7 @@ export const CollaborationBoard = ({ result, models, parsedTasks }: Collaboratio
           const taskIndex = result.plan.tasks.findIndex((t) => t.taskId === taskResult.taskId);
           const task = result.plan.tasks[taskIndex];
           const parsedTask = parsedTasks && parsedTasks[taskIndex];
-          const role = task?.role || 'general';
+          const taskName = task?.role || '任务';
           return (
             <div
               key={taskResult.taskId}
@@ -99,8 +96,8 @@ export const CollaborationBoard = ({ result, models, parsedTasks }: Collaboratio
                   <h3 className="font-semibold text-gray-800">
                     {getModelName(taskResult.modelId)}
                   </h3>
-                  <span className={`text-xs px-2 py-1 rounded-full ${roleColors[role]}`}>
-                    {parsedTask?.name || roleLabels[role]}
+                  <span className={`text-xs px-2 py-1 rounded-full ${getTaskColor(taskName)}`}>
+                    {parsedTask?.name || taskName}
                   </span>
                 </div>
                 <span

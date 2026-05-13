@@ -6,6 +6,7 @@ import modelsRouter from './routes/models';
 import chatRouter from './routes/chat';
 import roundtableRouter from './routes/roundtable';
 import collaborationRouter from './routes/collaboration';
+import orchestrationRouter from './routes/orchestration';
 import authRouter from './routes/auth';
 import subscriptionRouter from './routes/subscription';
 import apiKeysRouter from './routes/apiKeys';
@@ -29,6 +30,7 @@ app.use('/api/models', authMiddleware, rateLimitMiddleware, tenantIsolationMiddl
 app.use('/api/chat', authMiddleware, rateLimitMiddleware, tenantIsolationMiddleware, chatRouter);
 app.use('/api/roundtable', authMiddleware, rateLimitMiddleware, tenantIsolationMiddleware, roundtableRouter);
 app.use('/api/collaboration', authMiddleware, rateLimitMiddleware, tenantIsolationMiddleware, collaborationRouter);
+app.use('/api/orchestration', authMiddleware, rateLimitMiddleware, tenantIsolationMiddleware, orchestrationRouter);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

@@ -16,32 +16,16 @@ export class CollaborationScheduler {
   ): TaskAssignment[] {
     const tasks: TaskAssignment[] = [];
 
-    const roleMapping: Record<string, { type: TaskType; role: string }> = {
-      '分析': { type: 'analysis', role: 'analyst' },
-      '创意': { type: 'creative-writing', role: 'creative' },
-      '总结': { type: 'summarization', role: 'summarizer' },
-      '核查': { type: 'fact-checking', role: 'fact-checker' },
-      '解释': { type: 'detailed-explanation', role: 'writer' },
-      '写': { type: 'detailed-explanation', role: 'writer' },
-    };
-
     parsedTasks.forEach((parsedTask, index) => {
       const modelId = modelIds[index % modelIds.length];
-
-      let roleInfo = { type: 'analysis' as TaskType, role: 'analyst' };
-      for (const [keyword, info] of Object.entries(roleMapping)) {
-        if (parsedTask.name.includes(keyword) || parsedTask.description.includes(keyword)) {
-          roleInfo = info;
-          break;
-        }
-      }
+      const taskName = parsedTask.name;
 
       tasks.push({
         taskId: `task-${index + 1}`,
-        taskType: roleInfo.type,
+        taskType: 'analysis',
         taskDescription: `${parsedTask.description}\n\n原始问题：${mainQuestion}`,
         modelId: modelId,
-        role: roleInfo.role,
+        role: taskName,
       });
     });
 
@@ -51,28 +35,25 @@ export class CollaborationScheduler {
   private static generateDefaultTasks(mainQuestion: string, modelIds: string[]): TaskAssignment[] {
     const tasks: TaskAssignment[] = [];
 
-    const taskTemplates: { type: TaskType; description: string; role: string }[] = [
-      { type: 'analysis', description: '分析问题，识别关键要点和核心需求', role: 'analyst' },
-      { type: 'detailed-explanation', description: '深入解释相关概念和背景知识', role: 'writer' },
-      { type: 'creative-writing', description: '提供创造性的视角和解决方案', role: 'creative' },
-      { type: 'fact-checking', description: '验证信息准确性和数据来源', role: 'fact-checker' },
-      { type: 'summarization', description: '总结关键点和核心结论', role: 'summarizer' },
+    const taskTemplates: { description: string }[] = [
+      { description: '分析问题，识别关键要点和核心需求' },
+      { description: '深入解释相关概念和背景知识' },
+      { description: '提供创造性的视角和解决方案' },
+      { description: '验证信息准确性和数据来源' },
+      { description: '总结关键点和核心结论' },
     ];
 
     modelIds.forEach((modelId, index) => {
-      const modelInfo = this.getModelInfo(modelId);
-      if (!modelInfo) return;
-
-      const modelRole = modelInfo.role || 'general';
       const templateIndex = index % taskTemplates.length;
       const template = taskTemplates[templateIndex];
+      const taskName = `任务${String.fromCharCode(65 + templateIndex)}`;
 
       tasks.push({
         taskId: `task-${index + 1}`,
-        taskType: template.type,
+        taskType: 'analysis',
         taskDescription: `${template.description}。\n\n原始问题：${mainQuestion}`,
         modelId: modelId,
-        role: modelRole,
+        role: taskName,
       });
     });
 
@@ -80,19 +61,10 @@ export class CollaborationScheduler {
   }
 
   private static buildTaskMessage(task: TaskAssignment): Message[] {
-    const roleDescriptions: Record<string, string> = {
-      analyst: '你是一位专业分析师，擅长拆解复杂问题并识别关键要点。',
-      creative: '你是一位创意专家，擅长从独特视角提供创新解决方案。',
-      summarizer: '你是一位专业总结者，擅长提炼核心信息和关键点。',
-      'fact-checker': '你是一位事实核查专家，擅长验证信息的准确性。',
-      writer: '你是一位专业写作者，擅长深入解释和阐述复杂概念。',
-      general: '你是一位全能助手，能够处理各种类型的任务。',
-    };
-
     return [
       {
         role: 'system',
-        content: `${roleDescriptions[task.role]}\n\n你的任务：${task.taskDescription}`,
+        content: `你正在参与一个协作任务。\n\n你的任务：${task.taskDescription}`,
       },
       {
         role: 'user',

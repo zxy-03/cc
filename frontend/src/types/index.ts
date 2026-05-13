@@ -1,11 +1,7 @@
-export type ModelRole = 'analyst' | 'creative' | 'summarizer' | 'fact-checker' | 'writer' | 'general';
-
 export interface ModelInfo {
   id: string;
   name: string;
   provider: string;
-  role?: ModelRole;
-  expertise?: string[];
 }
 
 export interface Message {
