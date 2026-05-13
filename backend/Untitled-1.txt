@@ -1,0 +1,33 @@
+d:\Program\AI\CC\cc\
+├── backend/           # 后端服务
+│   ├── src/
+│   │   ├── adapters/          # 模型适配器
+│   │   │   ├── ClaudeAdapter.ts
+│   │   │   ├── DeepSeekAdapter.ts
+│   │   │   └── AdapterFactory.ts
+│   │   ├── config/            # 配置模块
+│   │   │   └── models.ts
+│   │   ├── routes/            # API 路由
+│   │   │   ├── models.ts
+│   │   │   ├── chat.ts
+│   │   │   └── roundtable.ts
+│   │   ├── scheduler/         # 并行调度器
+│   │   │   └── RoundtableScheduler.ts
+│   │   ├── types/             # 类型定义
+│   │   │   └── index.ts
+│   │   └── server.ts          # 主入口
+│   └── package.json
+└── frontend/          # 前端应用
+    ├── src/
+    │   ├── api/               # API 客户端
+    │   │   └── client.ts
+    │   ├── components/        # UI 组件
+    │   │   ├── ModelSelector.tsx
+    │   │   ├── QuestionInput.tsx
+    │   │   ├── RoundtableBoard.tsx
+    │   │   └── ComparisonView.tsx
+    │   ├── types/             # 类型定义
+    │   │   └── index.ts
+    │   ├── App.tsx            # 主应用
+    │   └── main.tsx           # 入口文件
+    └── package.json
