@@ -7,8 +7,16 @@ const API_BASE_URL = '/api';
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Accept': 'application/json;charset=UTF-8',
   },
+  responseEncoding: 'utf8',
+  transformRequest: [(data) => {
+    if (data && typeof data === 'object') {
+      return JSON.stringify(data);
+    }
+    return data;
+  }],
 });
 
 api.interceptors.request.use((config) => {

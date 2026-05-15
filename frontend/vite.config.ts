@@ -8,6 +8,10 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:3001',
         changeOrigin: true,
+        headers: {
+          'Accept': 'application/json;charset=UTF-8',
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
       },
     },
   },
