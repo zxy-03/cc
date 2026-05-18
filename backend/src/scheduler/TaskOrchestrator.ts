@@ -138,7 +138,7 @@ export class TaskOrchestrator {
     const recommendations = new Map<string, ExpertAgent[]>();
 
     for (const task of tasks) {
-      const recommendedAgents = recommendAgentsForTask(task.required_skills);
+      const recommendedAgents = recommendAgentsForTask(task.required_skills.join(','));
       recommendations.set(task.id, recommendedAgents);
     }
 

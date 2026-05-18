@@ -1,5 +1,71 @@
 # 变更日志 (Changelog)
 
+## [v3.1.0] - 2026-05-18
+
+### ✨ 新功能
+
+#### 1. 多AI协作 + 人工决策系统
+**功能描述**：实现"解析AI拆解 → 人工分配 → 专家AI执行 → 汇总AI整合"的完整工作流程。
+
+**四个关键角色**：
+| 角色 | 职责 | 实现方式 |
+|------|------|----------|
+| 解析AI | 任务规划器，拆解复杂需求 | TaskBreakdownParser |
+| 专家AI池 | 多个不同特长的AI代理 | expertAgents配置 |
+| 人类决策者 | 任务分配与决策 | OrchestrationBoard界面 |
+| 汇总AI | 总结官，整合输出 | SummaryGenerator |
+
+**专家AI池**：
+| ID | 名称 | 专长 |
+|----|------|------|
+| agent-data-collector | 数据搬运工 | 数据检索、网络搜索 |
+| agent-case-analyst | 案例分析狮 | 案例研究、商业分析 |
+| agent-trend-predictor | 趋势预言家 | 趋势预测、战略规划 |
+| agent-report-writer | 首席撰稿人 | 长文写作、内容整合 |
+| agent-code-expert | 代码工程师 | 代码生成、调试 |
+| agent-fact-checker | 事实核查员 | 事实核查、数据验证 |
+| agent-creative-writer | 创意写手 | 创意写作、文案策划 |
+| agent-summarizer | 总结大师 | 总结归纳、要点提炼 |
+
+**核心功能**：
+- 任务拆解：解析AI将用户需求拆解为结构化子任务
+- 人工分配：可视化任务卡片，智能推荐匹配的AI代理
+- 执行调度：DAG管理任务依赖，支持并行/串行执行
+- 汇总整合：过滤重复信息，解决矛盾，按要求结构整合
+
+### 📁 新增文件
+
+**后端新增**：
+- `backend/src/config/expertAgents.ts` - 专家AI池配置
+- `backend/src/utils/TaskBreakdownParser.ts` - 任务拆解解析器
+- `backend/src/scheduler/TaskOrchestrator.ts` - 任务编排引擎（DAG管理）
+- `backend/src/scheduler/ExecutionScheduler.ts` - 执行调度器
+- `backend/src/scheduler/SummaryGenerator.ts` - 汇总生成器
+- `backend/src/routes/orchestration.ts` - 编排API路由
+
+**前端新增**：
+- `frontend/src/api/orchestrationClient.ts` - 编排API客户端
+- `frontend/src/components/OrchestrationBoard.tsx` - 可视化任务分配面板
+
+### 🔧 修改文件
+
+- `backend/src/types/coordination.ts` - 添加SubTask、ExpertAgent、AssignmentPlan等新类型
+- `frontend/src/types/coordination.ts` - 同步前端类型定义
+- `backend/src/config/models.ts` - 移除role和expertise字段
+- `frontend/src/components/CollaborationBoard.tsx` - 移除角色标签，改为任务名称显示
+- `frontend/src/components/ModelSelector.tsx` - 移除角色标签，显示provider信息
+- `backend/src/server.ts` - 添加编排API路由
+
+### 🚀 技术亮点
+
+- DAG调度：使用有向无环图管理任务依赖
+- 并行执行：充分利用资源，提高效率
+- 智能推荐：基于技能匹配自动推荐AI
+- 容错机制：支持任务重试和AI更换
+- 多轮迭代：汇总阶段支持基于反馈的修改
+
+---
+
 ## [v2.1.0] - 2026-05-13
 
 ### 🐛 Bug修复

@@ -1,20 +1,21 @@
-import { DataSource, DataSourceType } from '../types/dataflow';
+import { DataSource, DataSourceType, ColumnInfo } from '../types/dataflow';
 
 export class DataParser {
-  static parseCSV(content: string): { columns: string[]; rows: Record<string, any>[] } {
+  static parseCSV(content: string): { columns: ColumnInfo[]; rows: Record<string, any>[] } {
     const lines = content.trim().split('\n').filter(line => line.trim());
     
     if (lines.length === 0) {
       return { columns: [], rows: [] };
     }
 
-    const columns = lines[0].split(',').map(col => col.trim());
+    const columnNames = lines[0].split(',').map(col => col.trim());
+    const columns: ColumnInfo[] = columnNames.map(name => ({ name, type: 'text' }));
     const rows: Record<string, any>[] = [];
 
     for (let i = 1; i < lines.length; i++) {
       const values = this.parseCSVLine(lines[i]);
       const row: Record<string, any> = {};
-      columns.forEach((col, index) => {
+      columnNames.forEach((col, index) => {
         row[col] = values[index] || '';
       });
       rows.push(row);
@@ -69,7 +70,7 @@ export class DataParser {
     return content.split('\n').filter(line => line.trim());
   }
 
-  static parse(content: string): { columns: string[]; data: Record<string, any>[] } {
+  static parse(content: string): { columns: ColumnInfo[]; data: Record<string, any>[] } {
     const type = this.detectType(content);
 
     if (type === 'csv') {
@@ -77,7 +78,10 @@ export class DataParser {
       return { columns: parsed.columns, data: parsed.rows };
     } else if (type === 'json') {
       const parsed = this.parseJSON(content);
-      return { columns: parsed.length > 0 && typeof parsed[0] === 'object' ? Object.keys(parsed[0]) : [], data: parsed };
+      const columns: ColumnInfo[] = parsed.length > 0 && typeof parsed[0] === 'object' 
+        ? Object.keys(parsed[0]).map(name => ({ name, type: 'text' })) 
+        : [];
+      return { columns, data: parsed };
     } else {
       return { columns: [], data: [] };
     }
@@ -113,7 +117,7 @@ export class DataParser {
 
   static createDataSource(id: string, name: string, content: string): DataSource {
     const type = this.detectType(content);
-    let columns: string[] = [];
+    let columns: ColumnInfo[] = [];
     let rowCount = 0;
     let sampleData: Record<string, any>[] = [];
 
@@ -127,7 +131,7 @@ export class DataParser {
       rowCount = parsed.length;
       sampleData = parsed.slice(0, 5);
       if (sampleData.length > 0 && typeof sampleData[0] === 'object') {
-        columns = Object.keys(sampleData[0]);
+        columns = Object.keys(sampleData[0]).map(name => ({ name, type: 'text' }));
       }
     } else {
       rowCount = content.split('\n').length;

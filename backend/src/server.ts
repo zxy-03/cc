@@ -8,7 +8,6 @@ import chatRouter from './routes/chat';
 import roundtableRouter from './routes/roundtable';
 import collaborationRouter from './routes/collaboration';
 import orchestrationRouter from './routes/orchestration';
-import dataflowRouter from './routes/dataflow';
 import datauploadRouter from './routes/dataupload';
 import authRouter from './routes/auth';
 import subscriptionRouter from './routes/subscription';
@@ -45,7 +44,6 @@ app.use('/api/chat', authMiddleware, rateLimitMiddleware, tenantIsolationMiddlew
 app.use('/api/roundtable', authMiddleware, rateLimitMiddleware, tenantIsolationMiddleware, roundtableRouter);
 app.use('/api/collaboration', authMiddleware, rateLimitMiddleware, tenantIsolationMiddleware, collaborationRouter);
 app.use('/api/orchestration', authMiddleware, rateLimitMiddleware, tenantIsolationMiddleware, orchestrationRouter);
-app.use('/api/dataflow', dataflowRouter);
 app.use('/api/dataupload', datauploadRouter);
 
 app.get('/api/health', (req, res) => {

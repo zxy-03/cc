@@ -8,7 +8,6 @@ import { QuestionInput } from './components/QuestionInput';
 import { RoundtableBoard } from './components/RoundtableBoard';
 import { ComparisonView } from './components/ComparisonView';
 import { CollaborationBoard } from './components/CollaborationBoard';
-import { DataFlowBoard } from './components/DataFlowBoard';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LoginPage, RegisterPage } from './pages/AuthPages';
 import { SubscriptionPage, ApiKeysPage } from './pages/DashboardPages';
@@ -61,12 +60,6 @@ const Header: React.FC = () => {
                   className={`text-sm font-medium ${location.pathname === '/' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800'}`}
                 >
                   对话
-                </Link>
-                <Link
-                  to="/dataflow"
-                  className={`text-sm font-medium ${location.pathname === '/dataflow' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800'}`}
-                >
-                  数据分析
                 </Link>
                 <Link
                   to="/subscription"
@@ -307,17 +300,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/dataflow"
-              element={
-                <ProtectedRoute>
-                  <>
-                    <Header />
-                    <DataFlowBoard defaultRequest="分析最近一季度GMV下降20%的原因，给出改善建议。" />
-                  </>
-                </ProtectedRoute>
-              }
-            />
+            
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
 

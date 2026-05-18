@@ -38,13 +38,13 @@ router.post('/breakdown', async (req, res) => {
       });
     }
 
-    const result = await TaskBreakdownParser.breakdownTask(user_request);
+    const subtasks = await TaskBreakdownParser.breakdownTask(user_request);
 
-    if (!result.success) {
-      return res.status(500).json(result);
-    }
-
-    res.json(result);
+    res.json({
+      success: true,
+      subtasks,
+      original_request: user_request,
+    });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({
@@ -65,17 +65,12 @@ router.post('/breakdown/regenerate', async (req, res) => {
       });
     }
 
-    const result = await TaskBreakdownParser.regenerateSubTask(
-      original_request,
-      task_id,
-      feedback
-    );
+    const result = await TaskBreakdownParser.regenerateSubTask(original_request);
 
-    if (!result.success) {
-      return res.status(500).json(result);
-    }
-
-    res.json(result);
+    res.json({
+      success: true,
+      subtask: result,
+    });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({
@@ -111,7 +106,7 @@ router.post('/agents/recommend', (req, res) => {
       });
     }
 
-    const recommendedAgents = recommendAgentsForTask(required_skills, exclude_busy);
+    const recommendedAgents = recommendAgentsForTask(required_skills.join(','));
 
     res.json({
       success: true,
